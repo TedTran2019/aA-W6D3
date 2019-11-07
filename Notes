@@ -1,0 +1,164 @@
+Backend -> Rails!
+Frontend -> Browsers!
+
+Ajax -> Async Javascript and XML
+- browser can make a HTTP request to server w/o throwing away what it already has
+- responses with JSON instead
+- most expensive is waiting for server to respond, loading things/reading files
+- How?
+	a. first send is HTML that has script source tags
+	b. JS code makes AJAX requests
+	c. Reponses from Rails include only JSON, not assets/HTML
+	d. all AJAX knows is that status codes from Rails
+	e. doesn't have to be jQuery to do AJAX!
+
+Instead of POST request, AJAX Request
+- #find only looks within one section
+- use preventDefault
+- $.ajax(function w/ method, url, dataType, data, success and error functions)
+- in Rails: respond_to do |format| .....
+- success callback gets arguments
+
+Adding a spinner!
+- google css spinner, then put in the html/css lmao
+
+#serialize method in Ruby!
+----------------------------------------------------------------------------
+Basic AJAX
+- Old method: forms submitted to server in HTTP request, redirects browser to
+	request another page, browse fetches and renders new content
+- Achieve better functionality when you don't need to be redirected (URL is the same),
+	is to make a HTTP request in background, aka browser request aka AJAX request
+	a. browser fires a JS callback function
+- it's called AJAX because XML is old standard, but JSON is the standard now.
+- servers can respond to any format, aka text JS html JSON pdf etc
+- although AJAX provided by browser, jQuery is used to paper over differences
+	and profit from a nice interface
+	a. $.ajax, $.get, $.post
+	b. https://api.jquery.com/jQuery.ajax/
+	c. Recall that jQuery is being replaced by frameworks and AJAX maybe replaced
+		by fetch API?
+	d. $.ajax accepts options object
+	e. https://blog.garstasio.com/you-dont-need-jquery/ajax/
+		- e.g understand how it works rather than just using a wrapper
+		- GO BACK TO THIS, DON'T LET jQuery BE A CRUTCH
+
+AJAX Remote Forms
+- jQuery comes with a serialize method which translates a set of form elements as
+	a URL encoded string
+- $.ajax accepts Object and Array data types for its data property. We can use
+	the serializeJSON jQuery plug-in to add a serializeJSON method to jQuery.
+- gem 'serialize_json-rails'
+- and then load the file (after jQuery) in app/assets/javascripts/application.js:
+- //= require serialize_json
+- authenticity token? Rails will automatically include a JavaScript library named
+	rails.js in your application.js file. Among a number of other things, this will
+	install a $.ajaxPrefilter; this filter gets run before every AJAX request.
+- $('meta[name="csrf-token"]').attr('content');
+
+Using Rails as an API
+- client-side rendering
+- when a web server provides non-UI formatted info, we call it a web API
+
+API: A **server-side web API** is a programmatic interface consisting of one or
+	more publicly exposed endpoints to a defined request-response message system
+
+- To make Rails an API, we're going to rewrite those views so that they serve up
+	raw JSON information instead of HTML; we'll call these views endpoints.
+
+Static HTML implementation:
+1. render :index, renders index.html.erb when controller action is hit
+
+API implementation:
+1.  If a request with a header for Accept: application/json comes in,
+	CatsController#index will automatically try to render
+	app/views/cats/index.json.jbuilder
+	- e.g json.array! @cats
+	- Jbuilder. It's just a gem that lets us write Ruby code to create JSON objects
+https://blog.bigbinary.com/2010/11/23/mime-type-resolution-in-rails.html
+2. accept header -> MIME types as content types
+	- when making an AJAX GET request, if no dataType specified, any response is ok
+	- if set to JSON, then the accept header will be application/json, text/javascript, */*; q=0.01
+3. controller's respond_to do |format|....
+
+Promises
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+- Much cleaner and shorter way to write/chain async functions
+- action: the primary function of a promise (i.e., fetch data from an API)
+- 3 states: pending, fulfilled, rejected...
+	- considered settled when fulfilled or rejected
+- a promise can only succeed or fail once, callbacks will not b invoked multiple times
+- a promise cannot change its state from fulfilled to rejected or vice versa
+- if a promise already settled and a callbacka dded that matches the state it's
+	invoked immediately
+- e.g const p = new Promise(executor); , executor is a function that takes in two
+	optional parameters; resolve and reject
+	- resolve and reject tells the promises what args to pass on once promise settled
+- Two important pre-defined methods: then and catch, both return a new promise obj
+	making them chainable
+- then accepts onFulfilled and onRejected
+	- e.g onFulfilled is like resolve and onRejected is like reject
+- catch only accepts onRejected... onRejected would have to throw error, not just
+	log one obv.
+- jQuery ajax object allows use of success callbacks and returns a jqXHR object,
+	which can be used like a promise. Can avoid passing a callback to ajax by calling
+	then on return value then passing callback to then
+	- notice how the jQuery jqXHR object takes then and fail, instead of then and catch
+	- jqXHR also has done (only success) and always (settled === run)
+https://stackoverflow.com/questions/28703241/promise-constructor-with-reject-call-vs-throwing-error
+reject is a callback, while throw can't be used async
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+When all promises need to be fulfilled in no particular order, Promise.all()
+https://github.com/stefanpenner/es6-promise
+Polyfill of es6 promise!
+- A polyfill is a piece of code (usually JavaScript on the Web) used to provide
+	modern functionality on older browsers that do not natively support it.
+https://developers.google.com/web/fundamentals/primers/promises
+- Events are great for things that can happen multiple times on the same object—keyup,
+	touchstart etc. With those events you don't really care about what happened before
+	you attached the listener
+- if a promise has succeeded or failed and you later add a success/failure callback,
+	 the correct callback will be called, even though the event took place earlier.
+- jQuery deferreds aren't Promise compliant, thus different and less useful
+	- can cast into standard promises
+	- e.g var jsPromise = Promise.resolve($.ajax('/whatever.json'))
+	- Notice how XMLHttpRequest is used instead of jQuery
+		- req = new XMLHttpRequest(), #open, #onload, #response, #statusText, #onerror,
+			#send (These are all from req, the instance of XMLHttpRequest)
+		- can make a function to do it all then not deal with it again
+		- think of then always returning promise, but with the value being whateva u want
+- chaining async actions
+- With then(func1, func2), func1 or func2 will be called, never both. But with
+	then(func1).catch(func2), both will be called if func1 rejects, as they're
+	separate steps in the chain.
+- Rejections happen when a promise is explicitly rejected, but also implicitly if
+	 an error is thrown in the constructor callback:
+Parallelism and sequencing: getting the best of both
+- Write as synchronous, then just add then() to make things happen one after
+	the other
+Creating a sequence
+- start off with a promise that always resolves
+- loop thru and add the actions to end of sequence
+
+Generators
+- star b4 function name === generator, yield is return/resume point
+- helper function that allows using yield to wait for promises to settle
+- pattern is so useful it's coming to ES7... basically put 'async' before
+	function to make it an async function, then can use await within the function
+	- always returns a promise
+https://developers.google.com/web/fundamentals/primers/async-functions
+for (etc of etc)... loop?
+- async functions always return promise
+- await means to wait until that promise settles and returns its result
+- await accepts thenables
+- try...catch
+- works well with PRomise.all()
+https://javascript.info/async-await
+
+$.ajax -> type, url, datatype, data, success/error functions, etc... Look at documentation!
+http://jqfundamentals.com/chapter/ajax-deferreds
+- JSON.stringify and JSON.parse
+- can do jsonp data type in case request fails, since XHR to other domains
+	tends to be blocked by browser. jsonp is JSON with padding
+----------------------------------------------------------------------------------
+
