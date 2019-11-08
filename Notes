@@ -161,4 +161,26 @@ http://jqfundamentals.com/chapter/ajax-deferreds
 - can do jsonp data type in case request fails, since XHR to other domains
 	tends to be blocked by browser. jsonp is JSON with padding
 ----------------------------------------------------------------------------------
+CSS friends 11: Reviewing pseudo-selectors, background-size, background-position,
+	overflow
+- sprite technique -> one image file that contains many smaller images
+- dry up CSS and reduce HTTP request overload
+- didn't catch usage of vertical-align
+---------------------------------------------------------------------------
+Know how AJAX requests allow the frontend and backend to communicate
+Be able to change the backend of an app by sending an AJAX request
+Be able to change the frontend of an app with data from an AJAX response
+Be able to write AJAX requests in an API Util file
+Be able to write basic Jbuilder views
+Know the basics of how promises work
 
+- Rails doesn't intelligently manage dependencies, so you still have to be extra
+	careful about the load order.
+- jquery, jquery_ujs, jquery.serializejson, require_tree .
+- application.js -> Rails manifes file similar to script tags in HTML but
+	Rails compiles them all into a single file for production. After requiring
+	tree (to require files in app/assets/javascripts), don't need to compile
+	JS files again bc Webpack will do.
+
+Hmm, setting up jQuery, Webpack/JS, and in the future, React....
+- Reference AJAX gemfile for additional gems to use and learn
