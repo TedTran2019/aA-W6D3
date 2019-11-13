@@ -212,3 +212,11 @@ Prioritize health -> studying -> networking/entertainment.
 Another day wasted, 1 day of 3.5 hours and 3 days of 0 hours of studying. What a
 massive mess. This combined with jury duty has taken me off schedule a ton.
 Get started on matters asap, focus, and don't procrastinate.
+
+#find, #append, #val, #preventDefault
+addMessage, clearForm -> not jQuery
+https://api.jquery.com/find/
+https://api.jquery.com/val/
+input event, hmmm.
+#empty vs #remove, first removes all child elements, other removes self + all children
+jbuilder is really useful.

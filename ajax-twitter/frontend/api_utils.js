@@ -15,7 +15,17 @@ const APIUtil = {
 			dataType: 'json',
 			error: (error) => console.log(error)
 		});
+	},
+
+	searchUsers: (queryVal) => {
+		return $.ajax({
+			url: `search`,
+			type: 'get',
+			dataType: 'json',
+			data: queryVal,
+			error: (error) => console.log(error)
+		});
 	}
-}
+};
 
 module.exports = APIUtil;
