@@ -17,12 +17,13 @@ const APIUtil = {
 		});
 	},
 
-	searchUsers: (queryVal) => {
+	searchUsers: (query) => {
+		console.log(query)
 		return $.ajax({
-			url: `search`,
+			url: `/users/search`,
 			type: 'get',
 			dataType: 'json',
-			data: queryVal,
+			data: { query },
 			error: (error) => console.log(error)
 		});
 	}

@@ -112,12 +112,13 @@ const APIUtil = {
 		});
 	},
 
-	searchUsers: (queryVal) => {
+	searchUsers: (query) => {
+		console.log(query)
 		return $.ajax({
-			url: `search`,
+			url: `/users/search`,
 			type: 'get',
 			dataType: 'json',
-			data: queryVal,
+			data: { query },
 			error: (error) => console.log(error)
 		});
 	}
@@ -138,14 +139,16 @@ module.exports = APIUtil;
 const Util = __webpack_require__(/*! ./api_utils.js */ "./frontend/api_utils.js");
 
 class FollowToggle {
-	constructor($el) {
+	constructor($el, options) {
 		this.button = $el;
-		this.userId = this.button.data('user-id');
+		this.userId = this.button.data('user-id') || options.userId;
+		console.log(this.followState);
 		this.followState = this.button.data('initial-follow-state');
+		if (typeof this.followState === 'undefined') {
+			this.followState = options.followState;
+		}
 		// followState in dataBase starts out as true/false
 		this.followState = (this.followState === true ? 'followed' : 'unfollowed');
-		console.log(this.userId);
-		console.log(this.followState);
 		this.render();
 		this.button.on('click', this.handleClick.bind(this));
 	}
@@ -217,6 +220,7 @@ $(() => {
 /***/ (function(module, exports, __webpack_require__) {
 
 const Util = __webpack_require__(/*! ./api_utils.js */ "./frontend/api_utils.js");
+const FollowToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
 
 class UsersSearch {
 	constructor($search) {
@@ -228,14 +232,29 @@ class UsersSearch {
 
 	handleInput() {
 		this.input.on('input', event => {
-			Util.searchUsers(this.input.val()).then(() => {
-				console.log('Success!');
+			Util.searchUsers(this.input.val()).then(users => {
+				console.log(users);
+				this.renderResults(users);
 			});
 		});
 	}
 
-	renderResults() {
+	renderResults(users) {
+		this.ul.empty();
+		users.forEach(user => {
+			let a = $('<a>')
+			.attr('href', user.id)
+			.text(`${user.username}`);
+			let button = $('<button>').addClass('follow-toggle');
+			let options = {
+				userId: user.id,
+				followState: user.followed
+			};
 
+			let li = $('<li>').append(a, button);
+			this.ul.append(li);
+			new FollowToggle(button, options);
+		});
 	}
 }
 

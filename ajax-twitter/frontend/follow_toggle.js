@@ -1,14 +1,16 @@
 const Util = require('./api_utils.js');
 
 class FollowToggle {
-	constructor($el) {
+	constructor($el, options) {
 		this.button = $el;
-		this.userId = this.button.data('user-id');
+		this.userId = this.button.data('user-id') || options.userId;
+		console.log(this.followState);
 		this.followState = this.button.data('initial-follow-state');
+		if (typeof this.followState === 'undefined') {
+			this.followState = options.followState;
+		}
 		// followState in dataBase starts out as true/false
 		this.followState = (this.followState === true ? 'followed' : 'unfollowed');
-		console.log(this.userId);
-		console.log(this.followState);
 		this.render();
 		this.button.on('click', this.handleClick.bind(this));
 	}

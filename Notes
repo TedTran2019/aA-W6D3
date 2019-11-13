@@ -220,3 +220,21 @@ https://api.jquery.com/val/
 input event, hmmm.
 #empty vs #remove, first removes all child elements, other removes self + all children
 jbuilder is really useful.
+
+Then grabs the resolved value of the promise!
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+Takes in a success and failure callback.
+
+Interesting-- found my mistake. Notice how in users_controller, it takes in
+params[:query]. When you sent in queryVal alone, it'd be {"c" => nil },
+{ "cu" => nil}, etc. When you sent in {queryVal}, it'd make it so it was
+{"queryVal" => "c"}.. which is also incorrect, because params is looking for query.
+So the variable name had to be query for it to be { "query" => "c" }. Well, that
+wasted an awful lot of time.
+
+#attr to give <a> tag an href
+Automatically adds the path + users/. Could just hardcode with /users/${user.id},
+though! Doesn't really make a difference.
+
+How does user get the #followed attribute? Where the hell is it coming from?
+It comes from the json.jbuilder file!
