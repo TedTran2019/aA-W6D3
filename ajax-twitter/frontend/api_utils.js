@@ -18,12 +18,21 @@ const APIUtil = {
 	},
 
 	searchUsers: (query) => {
-		console.log(query)
 		return $.ajax({
 			url: `/users/search`,
 			type: 'get',
 			dataType: 'json',
 			data: { query },
+			error: (error) => console.log(error)
+		});
+	},
+
+	createTweet: (data) => {
+		return $.ajax({
+			url: `/tweets`,
+			type: 'post',
+			dataType: 'json',
+			data: data,
 			error: (error) => console.log(error)
 		});
 	}

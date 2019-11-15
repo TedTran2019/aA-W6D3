@@ -238,3 +238,20 @@ though! Doesn't really make a difference.
 
 How does user get the #followed attribute? Where the hell is it coming from?
 It comes from the json.jbuilder file!
+
+"Partials in Jbuilder work the same way they do in ERB - the partial file name
+starts with a _ and you pass in a piece of information for the partial to render
+using a hash."
+
+Disable form when submit is made -> can't disable entire form so you have to
+disable all inputs -> have to disable input AFTER serialized, otherwise values
+will be ignored
+
+Ohh, #find and #filter are different in jQuery.
+#find searches children
+#filter searches in current colelction set
+
+Remember what input is in HTML. When you cleared all the :input vals, you also
+cleared the text for the submit button too.
+
+placeholder attribute in HTML form inputs is pretty useful.

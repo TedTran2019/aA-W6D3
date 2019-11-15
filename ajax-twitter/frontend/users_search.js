@@ -12,7 +12,6 @@ class UsersSearch {
 	handleInput() {
 		this.input.on('input', event => {
 			Util.searchUsers(this.input.val()).then(users => {
-				console.log(users);
 				this.renderResults(users);
 			});
 		});
