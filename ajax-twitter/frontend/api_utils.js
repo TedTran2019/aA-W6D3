@@ -35,6 +35,16 @@ const APIUtil = {
 			data: data,
 			error: (error) => console.log(error)
 		});
+	},
+
+	grabFeed: (max_created_at) => {
+		return $.ajax({
+			url: `/feed`,
+			type: 'get',
+			dataType: 'json',
+			data: { max_created_at },
+			error: (error) => console.log(error)
+		});
 	}
 };
 

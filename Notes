@@ -268,3 +268,12 @@ Instead of jbuilder, use fast_jsonapi in future.
 Putting all etc into one div, then emptying said div
 Or just finding all etc by class name, then removing?
 It seems like putting all into one div then emptying is much more efficient.
+
+Utilizing #map instead of a basic loop and recreating every one. Also, for longer
+nested divs and such, just write it in html and wrap it with jquery rather than
+spamming a billion jQuery appends/addClass/etc...
+
+Can use preventDefault() to stop links from navigating you to another place as well!!
+ajax data -> into querystring for params
+Huh, using #text in jQuery removes everything inside and replaces with the
+text-- didn't know that.

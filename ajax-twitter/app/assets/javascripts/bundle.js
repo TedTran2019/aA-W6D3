@@ -130,6 +130,16 @@ const APIUtil = {
 			data: data,
 			error: (error) => console.log(error)
 		});
+	},
+
+	grabFeed: (max_created_at) => {
+		return $.ajax({
+			url: `/feed`,
+			type: 'get',
+			dataType: 'json',
+			data: { max_created_at },
+			error: (error) => console.log(error)
+		});
 	}
 };
 
@@ -194,6 +204,52 @@ class FollowToggle {
 }
 
 module.exports = FollowToggle;
+
+
+/***/ }),
+
+/***/ "./frontend/infinite_tweets.js":
+/*!*************************************!*\
+  !*** ./frontend/infinite_tweets.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Util = __webpack_require__(/*! ./api_utils.js */ "./frontend/api_utils.js");
+
+class InfiniteTweets {
+	constructor($el) {
+		this.infinite = $el;
+		this.fetch_link = this.infinite.find('.fetch-more');
+		this.fetch_link.on('click', event => this.fetchTweets(event));
+		this.maxCreatedAt = null;
+	}
+
+	fetchTweets(event) {
+		event.preventDefault();
+		if (this.maxCreatedAt) {
+			Util.grabFeed(this.maxCreatedAt).then(tweets => this.insertTweets(tweets));
+		} else {
+			Util.grabFeed().then(tweets => this.insertTweets(tweets));
+		}
+	}
+
+	insertTweets(tweets) {
+		let ul = this.infinite.find('#feed');
+		tweets.forEach(tweet => {
+			let li = $('<li>').text(JSON.stringify(tweet));
+			ul.append(li);
+		});
+		// 20 is the limit in feeds_controller.rb
+		if (tweets.length < 20) {
+			this.fetch_link.remove();
+			this.infinite.append('No more tweets to fetch!');
+		} else {
+			this.maxCreatedAt = tweets[tweets.length - 1].created_at;
+		}
+	}
+}
+module.exports = InfiniteTweets;
 
 
 /***/ }),
@@ -293,11 +349,12 @@ module.exports = TweetCompose;
 const FollowToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
 const UsersSearch = __webpack_require__(/*! ./users_search.js */ "./frontend/users_search.js");
 const TweetCompose = __webpack_require__(/*! ./tweet_compose.js */ "./frontend/tweet_compose.js");
-
+const InfiniteTweets = __webpack_require__(/*! ./infinite_tweets.js */ "./frontend/infinite_tweets.js");
 $(() => {
 	const buttons = $('button.follow-toggle');
 	const searches = $('nav.users-search');
 	const tweetForms = $('form.tweet-compose');
+	const infiniteTweets = $('.infinite-tweets');
 
 	$.each(buttons, (_i, button) => {
 		new FollowToggle($(button));
@@ -307,6 +364,9 @@ $(() => {
 	});
 	$.each(tweetForms, (_i, form) => {
 		new TweetCompose($(form));
+	});
+	$.each(infiniteTweets, (_i, tweet) => {
+		new InfiniteTweets($(tweet));
 	});
 });
 
