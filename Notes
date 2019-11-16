@@ -255,3 +255,16 @@ Remember what input is in HTML. When you cleared all the :input vals, you also
 cleared the text for the submit button too.
 
 placeholder attribute in HTML form inputs is pretty useful.
+
+Setting up global variables in JS -> in application.html.erb -> script, window.users
+= ... !!!
+In our case, render'd json.jbuilder partial w/ User.all as users then .html_safe
+to evade injections
+
+Instead of jbuilder, use fast_jsonapi in future.
+
+#after, #insertAfter for jQuery.
+
+Putting all etc into one div, then emptying said div
+Or just finding all etc by class name, then removing?
+It seems like putting all into one div then emptying is much more efficient.
