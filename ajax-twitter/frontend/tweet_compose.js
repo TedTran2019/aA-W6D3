@@ -23,17 +23,14 @@ class TweetCompose {
 	clearInput() {
 		this.form.find('textarea').val('');
 		$('.tweet-compose .mention').remove();
+		this.form.find(':input').prop('disabled', false);
+		this.form.find('.chars-left').empty();
 	}
 
 	handleSuccess(tweet) {
-		console.log(tweet);
 		this.clearInput.bind(this)();
-		this.form.find(':input').prop('disabled', false);
 		let ul_name = this.form.data('tweets-ul');
-		let ul = $(ul_name);
-		let li = $('<li>').append(JSON.stringify(tweet));
-		ul.prepend(li);
-		this.form.find('.chars-left').empty();
+		$(ul_name).trigger('insert-tweet', tweet);
 	}
 
 	countRemaining() {

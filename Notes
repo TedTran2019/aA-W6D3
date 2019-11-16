@@ -277,3 +277,15 @@ Can use preventDefault() to stop links from navigating you to another place as w
 ajax data -> into querystring for params
 Huh, using #text in jQuery removes everything inside and replaces with the
 text-- didn't know that.
+
+After using Javascript's #bind, event argument is automatically included... -> look
+at just #bind(this) then no future arguments included. Event is still present.
+I think it's just more of Javascript's power to have less or more arguments
+without any errors, when triggered-- notice how additional data can be passed
+in. event is default first argument, then all sorts of data can be passed in
+after!
+
+Utilizing #trigger for custom events
+
+Remember that maxCreatedAt only affects the feed, not the tweet composition.
+They utilize different AJAX requests...!

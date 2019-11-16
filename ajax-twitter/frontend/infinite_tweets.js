@@ -3,9 +3,11 @@ const Util = require('./api_utils.js');
 class InfiniteTweets {
 	constructor($el) {
 		this.infinite = $el;
+		this.maxCreatedAt = null;
 		this.fetch_link = this.infinite.find('.fetch-more');
 		this.fetch_link.on('click', event => this.fetchTweets(event));
-		this.maxCreatedAt = null;
+		// this.fetch_link.on('click', this.fetchTweets.bind(this));
+		this.infinite.on('insert-tweet', this.insertTweet.bind(this));
 	}
 
 	fetchTweets(event) {
@@ -27,8 +29,16 @@ class InfiniteTweets {
 		if (tweets.length < 20) {
 			this.fetch_link.remove();
 			this.infinite.append('No more tweets to fetch!');
-		} else {
+		} else if (tweets.length > 0) {
 			this.maxCreatedAt = tweets[tweets.length - 1].created_at;
+		}
+	}
+
+	insertTweet(event, tweet) {
+		let li = $('<li>').append(JSON.stringify(tweet));
+		$(event.target).prepend(li);
+		if (!this.maxCreatedAt) {
+			this.maxCreatedAt = tweet.created_at;
 		}
 	}
 }

@@ -220,9 +220,11 @@ const Util = __webpack_require__(/*! ./api_utils.js */ "./frontend/api_utils.js"
 class InfiniteTweets {
 	constructor($el) {
 		this.infinite = $el;
+		this.maxCreatedAt = null;
 		this.fetch_link = this.infinite.find('.fetch-more');
 		this.fetch_link.on('click', event => this.fetchTweets(event));
-		this.maxCreatedAt = null;
+		// this.fetch_link.on('click', this.fetchTweets.bind(this));
+		this.infinite.on('insert-tweet', this.insertTweet.bind(this));
 	}
 
 	fetchTweets(event) {
@@ -244,8 +246,16 @@ class InfiniteTweets {
 		if (tweets.length < 20) {
 			this.fetch_link.remove();
 			this.infinite.append('No more tweets to fetch!');
-		} else {
+		} else if (tweets.length > 0) {
 			this.maxCreatedAt = tweets[tweets.length - 1].created_at;
+		}
+	}
+
+	insertTweet(event, tweet) {
+		let li = $('<li>').append(JSON.stringify(tweet));
+		$(event.target).prepend(li);
+		if (!this.maxCreatedAt) {
+			this.maxCreatedAt = tweet.created_at;
 		}
 	}
 }
@@ -286,17 +296,14 @@ class TweetCompose {
 	clearInput() {
 		this.form.find('textarea').val('');
 		$('.tweet-compose .mention').remove();
+		this.form.find(':input').prop('disabled', false);
+		this.form.find('.chars-left').empty();
 	}
 
 	handleSuccess(tweet) {
-		console.log(tweet);
 		this.clearInput.bind(this)();
-		this.form.find(':input').prop('disabled', false);
 		let ul_name = this.form.data('tweets-ul');
-		let ul = $(ul_name);
-		let li = $('<li>').append(JSON.stringify(tweet));
-		ul.prepend(li);
-		this.form.find('.chars-left').empty();
+		$(ul_name).trigger('insert-tweet', tweet);
 	}
 
 	countRemaining() {
