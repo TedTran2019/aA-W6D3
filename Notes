@@ -289,3 +289,20 @@ Utilizing #trigger for custom events
 
 Remember that maxCreatedAt only affects the feed, not the tweet composition.
 They utilize different AJAX requests...!
+
+Hmm, JS's DOM api seems pretty good and easy to use as well. If it's consistent,
+don't really see the need for jQuery at all.
+
+jbuilder
+---------
+json.extract! @thing (where @thing is something defined in controller)
+Extracts attribs of passed object and turns them into JSON attributes
+Can choose which attribs to extract, or just grab all.
+
+request.referrer simply gives you the previous URL or / if none
+
+Huh, so index.json.jbuilder DOESN'T work, but index.jbuilder does.
+Interesting. -> Must be because of an incorrect accept header? I'm
+trying to get HTML instead of JSON, maybe? I'll figure it out eventually.
+
+Let's learn netflix's fast json API rather than utilizing jbuilder after this.
